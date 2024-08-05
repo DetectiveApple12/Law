@@ -53,7 +53,7 @@ Input can be taken in Law with the `in` keyword:
 out "Enter current version: ";
 in currentVersion;
 
-rule if (currentVersion == 1.0.0) {
+rule if (currentVersion == "1.0.0") {
     out "Version is up to date!";
 }
 ```
