@@ -17,11 +17,11 @@ out "Hello World!";
 ```
 By running the following code with the command:
 ```bash
-./law main.law
+./Law.exe main.law
 ```
 The Result will show:
 ```
-$ ./law main.law
+$ ./Law.exe main.law
 Hello World!
 
 ```
