@@ -31,6 +31,9 @@ void Tokenizer::tokenize()
 			else if (value == "if") {
 				this->_tokens.push_back({ TokenType::_if, "" });
 			}
+			else if (value == "in") {
+				this->_tokens.push_back({ TokenType::in, "" });
+			}
 			else {
 				this->_tokens.push_back({ TokenType::var_name, value });
 			}

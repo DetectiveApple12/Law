@@ -77,6 +77,16 @@ void Parser::Parse()
 				}
 			}
 		}
+		else if (peek().tokenType == TokenType::in) {
+			getAndMove();
+			if (peek().tokenType == TokenType::var_name) {
+				std::string varName = getAndMove().value;
+				std::string value;
+				std::getline(std::cin, value);
+				checkSemi();
+				this->_vars.insert_or_assign(varName, value);
+			}
+		}
 		else if (peek().tokenType == TokenType::rule) {
 			getAndMove();
 			if (peek().tokenType == TokenType::_if) {
@@ -86,29 +96,43 @@ void Parser::Parse()
 					throw std::runtime_error(error);
 				}
 				getAndMove();
-				if (peek().tokenType == TokenType::var_name) {
-					std::string first = getAndMove().value;
-					if (this->_vars.find(first) != this->_vars.end()) {
-						first = this->_vars.at(first);
+				if (peek().tokenType == TokenType::var_name || peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
+					Token token = getAndMove();
+					std::string first;
+					if (token.tokenType == TokenType::var_name) {
+						first = token.value;
+						if (this->_vars.find(first) != this->_vars.end()) {
+							first = this->_vars.at(first);
+						}
+						else {
+							std::string error = "ParserError: Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
+							throw std::runtime_error(error);
+						}
 					}
 					else {
-						std::string error = "ParserError: Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
-						throw std::runtime_error(error);
+						first = token.value;
 					}
 					if (peek().tokenType == TokenType::eq || peek().tokenType == TokenType::neq || peek().tokenType == TokenType::larger || peek().tokenType == TokenType::smaller) {
 						TokenType oper = getAndMove().tokenType;
-						if (peek().tokenType == TokenType::var_name) {
-							std::string second = getAndMove().value;
+						if (peek().tokenType == TokenType::var_name || peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
+							token = getAndMove();
 							if (peek().tokenType != TokenType::close_par) {
 								std::string error = "ParserError: Expected `)` after statement " + std::to_string(this->_currLine + 1);
 								throw std::runtime_error(error);
 							}
-							if (this->_vars.find(second) != this->_vars.end()) {
-								second = this->_vars.at(second);
+							std::string second;
+							if (token.tokenType == TokenType::var_name) {
+								second = token.value;
+								if (this->_vars.find(second) != this->_vars.end()) {
+									second = this->_vars.at(second);
+								}
+								else {
+									std::string error = "ParserError: Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
+									throw std::runtime_error(error);
+								}
 							}
 							else {
-								std::string error = "ParserError: Unkown variable `" + second + "` at line " + std::to_string(this->_currLine + 1);
-								throw std::runtime_error(error);
+								second = token.value;
 							}
 							getAndMove();
 							if (peek().tokenType != TokenType::open_brak) {

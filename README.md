@@ -6,7 +6,7 @@ String \
 Integer
 
 ## Tutorial For Law:
-The Law is to be a declarative, high-level programming language, simple in design, readable and expressive. It is well suited for applications where the intent is clear and the code short.
+The Law is to be a declarative, high-level programming language, simple in design, readable and expressive. It is well suited for applications where the intent is clear and the code short. The main use of Law is for checking that a user meets all requirments before downloading items or tools from the internet. 
 
 To write a basic Hello World program in Law do the following:
 - Create a Law file: main.law
@@ -50,6 +50,16 @@ set y = 10; -- This defines y as 10
 
 rule if (x < y) {
     out "5 is smaller than 10"; -- This will run
+}
+```
+
+Input can be taken in Law with the `in` keyword:
+```law
+out "Enter current version: ";
+in currentVersion;
+
+rule if (currentVersion == 1.0.0) {
+    out "Version is up to date!";
 }
 ```
 
