@@ -1,9 +1,4 @@
 # Law
-Law is an interpreted rule-based language
-***
-## Current Types:
-String \
-Integer
 
 ## Tutorial For Law:
 The Law is to be a declarative, high-level programming language, simple in design, readable and expressive. It is well suited for applications where the intent is clear and the code short. The main use of Law is for checking that a user meets all requirments before downloading items or tools from the internet. 
