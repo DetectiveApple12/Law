@@ -9,68 +9,55 @@ Tokenizer::~Tokenizer()
 {
 }
 
-void Tokenizer::Tokenize()
+void Tokenizer::tokenize()
 {
+	if (this->_currLine == this->_lines.size()) return;
+
 	this->_tokens.clear();
-	if (this->_currLine >= this->_lines.size()) return;
 
-	std::string& currLine = this->_lines[this->_currLine];
-	while (_curr != currLine.size()) {
+	std::string& currentLine = this->_lines[this->_currLine];
+	while (this->_curr != currentLine.size()) {
 		if (std::isalpha(peek())) {
-			std::string value = "";
-			while (std::isalnum(peek())) {
-				value += getAndMove();
-			}
-
+			std::string value = parseVar();
 			if (value == "out") {
 				this->_tokens.push_back({ TokenType::out, value });
 			}
 			else if (value == "set") {
-				this->_tokens.push_back({ TokenType::set, ""});
+				this->_tokens.push_back({ TokenType::set, "" });
 			}
 			else if (value == "rule") {
-				this->_tokens.push_back({ TokenType::rule, ""});
+				this->_tokens.push_back({ TokenType::rule, "" });
 			}
 			else if (value == "if") {
-				this->_tokens.push_back({ TokenType::_if, ""});
+				this->_tokens.push_back({ TokenType::_if, "" });
 			}
 			else {
 				this->_tokens.push_back({ TokenType::var_name, value });
 			}
 		}
 		else if (std::isdigit(peek())) {
-			std::string value = "";
-			while (std::isdigit(peek())) {
-				value += getAndMove();
-			}
+			std::string value = parseDig();
 			this->_tokens.push_back({ TokenType::int_lit, std::to_string(stoi(value)) });
 		}
 		else if (peek() == '\"') {
-			std::string value = "";
-			getAndMove();
-			while (peek() != '\"') {
-				if (peek() == '\0') break;
-				value += getAndMove();
-			}
-			getAndMove();
-
+			std::string value = parseStrLit();
 			this->_tokens.push_back({ TokenType::str_lit, value });
 		}
 		else if (peek() == ';') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::semi, ""});
+			this->_tokens.push_back({ TokenType::semi, "" });
 		}
-		else if (peek() == ' ') {
+		else if (peek() == ' ' || peek() == '\t') {
 			getAndMove();
 		}
 		else if (peek() == '=') {
 			getAndMove();
 			if (peek() == '=') {
 				getAndMove();
-				this->_tokens.push_back({ TokenType::eq, ""});
+				this->_tokens.push_back({ TokenType::eq, "" });
 			}
 			else {
-				this->_tokens.push_back({ TokenType::assign, ""});
+				this->_tokens.push_back({ TokenType::assign, "" });
 			}
 		}
 		else if (peek() == '!') {
@@ -82,30 +69,27 @@ void Tokenizer::Tokenize()
 		}
 		else if (peek() == '>') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::larger, ""});
+			this->_tokens.push_back({ TokenType::larger, "" });
 		}
 		else if (peek() == '<') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::smaller, ""});
+			this->_tokens.push_back({ TokenType::smaller, "" });
 		}
 		else if (peek() == '{') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::open_brak, ""});
+			this->_tokens.push_back({ TokenType::open_brak, "" });
 		}
 		else if (peek() == '}') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::close_brak, ""});
+			this->_tokens.push_back({ TokenType::close_brak, "" });
 		}
 		else if (peek() == '(') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::open_par, ""});
+			this->_tokens.push_back({ TokenType::open_par, "" });
 		}
 		else if (peek() == ')') {
 			getAndMove();
-			this->_tokens.push_back({ TokenType::close_par, ""});
-		}
-		else if (peek() == '\t') {
-			getAndMove();
+			this->_tokens.push_back({ TokenType::close_par, "" });
 		}
 		else if (peek() == '-') {
 			getAndMove();
@@ -113,19 +97,19 @@ void Tokenizer::Tokenize()
 				break;
 			}
 			else {
-				this->_tokens.push_back({ TokenType::minus, ""});
+				this->_tokens.push_back({ TokenType::minus, "" });
 			}
 		}
 		else {
-			std::string error = "Unrecognized Token: ` `";
-			error[21] = peek();
+			std::string error = "TokenizeError: Unrecognized Token `" + std::string(1, peek()) + "` [Line " + std::to_string(this->_currLine + 1) + "]";
 			throw std::runtime_error(error);
 		}
 	}
+
+	this->_tokensSets.push_back(this->_tokens);
 	this->_curr = 0;
 	this->_currLine++;
-	_tokensSets.push_back(_tokens);
-	Tokenize();
+	tokenize();
 }
 
 std::vector<std::vector<Token>>& Tokenizer::getTokens()
@@ -148,4 +132,34 @@ char Tokenizer::getAndMove()
 	}
 	this->_curr++;
 	return this->_lines[this->_currLine][this->_curr - 1];
+}
+
+std::string Tokenizer::parseVar()
+{
+	std::string value = "";
+	while (std::isalnum(peek())) {
+		value += getAndMove();
+	}
+	return value;
+}
+
+std::string Tokenizer::parseDig()
+{
+	std::string value = "";
+	while (std::isdigit(peek())) {
+		value += getAndMove();
+	}
+	return value;
+}
+
+std::string Tokenizer::parseStrLit()
+{
+	std::string value = "";
+	getAndMove();
+	while (peek() != '\"') {
+		if (peek() == '\"') break;
+		value += getAndMove();
+	}
+	getAndMove();
+	return value;
 }

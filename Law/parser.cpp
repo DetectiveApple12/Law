@@ -43,12 +43,13 @@ void Parser::Parse()
 					std::cout << this->_vars.at(varName) << std::endl;
 				}
 				else {
-					std::string error = "Unkown variable `" + varName + "` at line " + std::to_string(this->_currLine + 1);
+					std::string error = "ParserError: Unkown variable `" + varName + "` at line " + std::to_string(this->_currLine + 1);
 					throw std::runtime_error(error);
 				}
 			}
 			else {
-				throw std::runtime_error("Expected string or variable name after 'out' keyword");
+				std::string error = "ParserError: Expected string or variable name after 'out' keyword " + std::to_string(this->_currLine + 1);
+				throw std::runtime_error(error);
 			}
 		} 
 		else if (peek().tokenType == TokenType::set) {
@@ -69,7 +70,7 @@ void Parser::Parse()
 							this->_vars.insert_or_assign(varName, this->_vars.at(assignVarName));
 						}
 						else {
-							std::string error = "Unkown variable `" + varName + "` at line " + std::to_string(this->_currLine + 1);
+							std::string error = "ParserError: Unkown variable `" + varName + "` at line " + std::to_string(this->_currLine + 1);
 							throw std::runtime_error(error);
 						}
 					}
@@ -81,7 +82,8 @@ void Parser::Parse()
 			if (peek().tokenType == TokenType::_if) {
 				getAndMove();
 				if (peek().tokenType != TokenType::open_par) {
-					throw std::runtime_error("Expected `(` after if keyword");
+					std::string error = "ParserError: Expected `(` after if keyword " + std::to_string(this->_currLine + 1);
+					throw std::runtime_error(error);
 				}
 				getAndMove();
 				if (peek().tokenType == TokenType::var_name) {
@@ -90,7 +92,7 @@ void Parser::Parse()
 						first = this->_vars.at(first);
 					}
 					else {
-						std::string error = "Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
+						std::string error = "ParserError: Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
 						throw std::runtime_error(error);
 					}
 					if (peek().tokenType == TokenType::eq || peek().tokenType == TokenType::neq || peek().tokenType == TokenType::larger || peek().tokenType == TokenType::smaller) {
@@ -98,18 +100,20 @@ void Parser::Parse()
 						if (peek().tokenType == TokenType::var_name) {
 							std::string second = getAndMove().value;
 							if (peek().tokenType != TokenType::close_par) {
-								throw std::runtime_error("Expected `)` after statement");
+								std::string error = "ParserError: Expected `)` after statement " + std::to_string(this->_currLine + 1);
+								throw std::runtime_error(error);
 							}
 							if (this->_vars.find(second) != this->_vars.end()) {
 								second = this->_vars.at(second);
 							}
 							else {
-								std::string error = "Unkown variable `" + second + "` at line " + std::to_string(this->_currLine + 1);
+								std::string error = "ParserError: Unkown variable `" + second + "` at line " + std::to_string(this->_currLine + 1);
 								throw std::runtime_error(error);
 							}
 							getAndMove();
 							if (peek().tokenType != TokenType::open_brak) {
-								throw std::runtime_error("Expected `{` after `)`");
+								std::string error = "ParserError: Expected `{` after `)` " + std::to_string(this->_currLine + 1);
+								throw std::runtime_error(error);
 							}
 							getAndMove();
 							if (operation(first, second, oper)) {
@@ -128,7 +132,7 @@ void Parser::Parse()
 			runCodeBrak--;
 		}
 		else {
-			std::string error = "Could not parse token at line " + std::to_string(this->_currLine + 1);
+			std::string error = "ParserError: Unexpected token at line " + std::to_string(this->_currLine + 1);
 			throw std::runtime_error(error);
 		}
 	}
@@ -141,11 +145,11 @@ void Parser::Parse()
 void Parser::checkSemi() {
 	if (peek().tokenType != TokenType::semi) {
 		if (peek().tokenType == TokenType::eol) {
-			std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
+			std::string error = "ParserError: Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
 			throw std::runtime_error(error);
 		}
 		else {
-			std::string error = "Unexpected token at end of line " + std::to_string(this->_currLine + 1);
+			std::string error = "ParserError: Unexpected token at end of line " + std::to_string(this->_currLine + 1);
 			throw std::runtime_error(error);
 		}
 	}

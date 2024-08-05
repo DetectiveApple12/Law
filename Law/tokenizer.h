@@ -18,7 +18,7 @@ class Tokenizer
 public:
 	Tokenizer(std::vector<std::string> text);
 	~Tokenizer();
-	void Tokenize();
+	void tokenize();
 	std::vector<std::vector<Token>>& getTokens();
 
 private:
@@ -30,5 +30,8 @@ private:
 
 	char peek();
 	char getAndMove();
+	std::string parseVar();
+	std::string parseDig();
+	std::string parseStrLit();
 
 };
