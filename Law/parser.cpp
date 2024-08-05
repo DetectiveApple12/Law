@@ -193,7 +193,17 @@ bool Parser::operation(std::string a, std::string b, TokenType op)
 		}
 	}
 	else if (op == TokenType::smaller) {
-		return a < b;
+		if (a.size() < b.size()) {
+			return true;
+		}
+		else if (a.size() > b.size()) {
+			return false;
+		}
+		else {
+			int index = 0;
+			while (index != a.size() - 1 && a[index] == b[index]) index++;
+			return a[index] < b[index];
+		}
 	}
 	else {
 		return false;

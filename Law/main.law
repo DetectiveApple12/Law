@@ -1,1 +1,8 @@
-out "Hello World!";
+set x = 5;
+set y = 10;
+
+rule if (x < y) {
+	out "5 is smaller than 10"; -- That's crazy!
+}
+
+
