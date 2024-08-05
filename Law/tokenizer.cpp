@@ -38,6 +38,13 @@ void Tokenizer::Tokenize()
 				this->_tokens.push_back({ TokenType::var_name, value });
 			}
 		}
+		else if (std::isdigit(peek())) {
+			std::string value = "";
+			while (std::isdigit(peek())) {
+				value += getAndMove();
+			}
+			this->_tokens.push_back({ TokenType::int_lit, std::to_string(stoi(value)) });
+		}
 		else if (peek() == '\"') {
 			std::string value = "";
 			getAndMove();
@@ -73,6 +80,14 @@ void Tokenizer::Tokenize()
 				this->_tokens.push_back({ TokenType::neq, "" });
 			}
 		}
+		else if (peek() == '>') {
+			getAndMove();
+			this->_tokens.push_back({ TokenType::larger, ""});
+		}
+		else if (peek() == '<') {
+			getAndMove();
+			this->_tokens.push_back({ TokenType::smaller, ""});
+		}
 		else if (peek() == '{') {
 			getAndMove();
 			this->_tokens.push_back({ TokenType::open_brak, ""});
@@ -91,6 +106,15 @@ void Tokenizer::Tokenize()
 		}
 		else if (peek() == '\t') {
 			getAndMove();
+		}
+		else if (peek() == '-') {
+			getAndMove();
+			if (peek() == '-') {
+				break;
+			}
+			else {
+				this->_tokens.push_back({ TokenType::minus, ""});
+			}
 		}
 		else {
 			std::string error = "Unrecognized Token: ` `";

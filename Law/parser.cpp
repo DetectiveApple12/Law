@@ -31,7 +31,7 @@ void Parser::Parse()
 		}
 		if (peek().tokenType == TokenType::out) {
 			getAndMove();
-			if (peek().tokenType == TokenType::str_lit) {
+			if (peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
 				Token tokenHolder = getAndMove();
 				if (peek().tokenType != TokenType::semi) {
 					std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
@@ -65,7 +65,7 @@ void Parser::Parse()
 				std::string varName = getAndMove().value;
 				if (peek().tokenType == TokenType::assign) {
 					getAndMove();
-					if (peek().tokenType == TokenType::str_lit) {
+					if (peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
 						std::string value = getAndMove().value;
 						if (peek().tokenType != TokenType::semi) {
 							std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
@@ -109,7 +109,7 @@ void Parser::Parse()
 						std::string error = "Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
 						throw std::runtime_error(error);
 					}
-					if (peek().tokenType == TokenType::eq || peek().tokenType == TokenType::neq) {
+					if (peek().tokenType == TokenType::eq || peek().tokenType == TokenType::neq || peek().tokenType == TokenType::larger || peek().tokenType == TokenType::smaller) {
 						TokenType oper = getAndMove().tokenType;
 						if (peek().tokenType == TokenType::var_name) {
 							std::string second = getAndMove().value;
@@ -178,6 +178,22 @@ bool Parser::operation(std::string a, std::string b, TokenType op)
 	}
 	else if (op == TokenType::neq) {
 		return a != b;
+	}
+	else if (op == TokenType::larger) {
+		if (a.size() > b.size()) {
+			return true;
+		}
+		else if (a.size() < b.size()) {
+			return false;
+		}
+		else {
+			int index = 0;
+			while (index != a.size() - 1 && a[index] == b[index]) index++;
+			return a[index] > b[index];
+		}
+	}
+	else if (op == TokenType::smaller) {
+		return a < b;
 	}
 	else {
 		return false;

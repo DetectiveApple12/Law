@@ -1,6 +1,1 @@
-set x = "Hello";
-set y = x;
-
-rule if (x == y) {
-	out "Equal!";
-}
+out "Hello World!";

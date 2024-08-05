@@ -5,7 +5,7 @@
 #include <cctype>
 
 enum class TokenType {
-	set, eq, rule, _if, open_brak, close_brak, open_par, close_par, out, str_lit, assign, semi, var_name, eol, neq
+	set, eq, rule, _if, open_brak, close_brak, open_par, close_par, out, str_lit, assign, semi, var_name, eol, neq, int_lit, larger, smaller, minus
 };
 
 struct Token {

@@ -9,6 +9,9 @@ int main(int argc, char** argv) {
 	if (argc != 2) {
 		return -1;
 	}
+	if (std::string(argv[1]) == "-help") {
+		std::cout << "Usage is ./law <file-path>" << std::endl;
+	}
 	std::ifstream file(argv[1]);
 	std::vector<std::string> lines;
 	std::string lineText;

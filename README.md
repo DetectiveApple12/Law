@@ -1,6 +1,10 @@
 # Law
 Law is an interpreted rule-based language
 ***
+## Current Types:
+String \
+Integer
+
 ## Tutorial For Law:
 The Law is to be a declarative, high-level programming language, simple in design, readable and expressive. It is well suited for applications where the intent is clear and the code short.
 
@@ -27,7 +31,7 @@ set x = "Hello World!";
 out x;
 ```
 
-Law's code is written with rules - A rule is a required statement for an event to occur, meaning if there is a rule which says that x is equal to y the code inside the rule will only run if x == y
+Law's code is written with rules - A rule is a required statement for an event to occur, meaning if there is a rule which says that x is equal to y the code inside the rule will only run if x == y same with >, < and !=
 
 Code example for rules with set variables:
 ```law
@@ -36,6 +40,16 @@ set y = "World!"
 
 rule if (x == y) {
     out "X and Y are equal";
+}
+```
+
+Comments can be written in Law with the `--`:
+```law
+set x = 5; -- This defines x as 5
+set y = 10; -- This defines y as 10
+
+rule if (x < y) {
+    out "5 is smaller than 10"; -- This will run
 }
 ```
 
