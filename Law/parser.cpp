@@ -33,21 +33,13 @@ void Parser::Parse()
 			getAndMove();
 			if (peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
 				Token tokenHolder = getAndMove();
-				if (peek().tokenType != TokenType::semi) {
-					std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
-					throw std::runtime_error(error);
-				}
-				getAndMove();
+				checkSemi();
 				std::cout << tokenHolder.value << std::endl;
 			}
 			else if (peek().tokenType == TokenType::var_name) {
 				std::string varName = getAndMove().value;
 				if (this->_vars.find(varName) != this->_vars.end()) {
-					if (peek().tokenType != TokenType::semi) {
-						std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
-						throw std::runtime_error(error);
-					}
-					getAndMove();
+					checkSemi();
 					std::cout << this->_vars.at(varName) << std::endl;
 				}
 				else {
@@ -67,21 +59,13 @@ void Parser::Parse()
 					getAndMove();
 					if (peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
 						std::string value = getAndMove().value;
-						if (peek().tokenType != TokenType::semi) {
-							std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
-							throw std::runtime_error(error);
-						}
-						getAndMove();
+						checkSemi();
 						this->_vars.insert_or_assign(varName, value);
 					}
 					else if (peek().tokenType == TokenType::var_name) {
 						std::string assignVarName = getAndMove().value;
 						if (this->_vars.find(assignVarName) != this->_vars.end()) {
-							if (peek().tokenType != TokenType::semi) {
-								std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
-								throw std::runtime_error(error);
-							}
-							getAndMove();
+							checkSemi();
 							this->_vars.insert_or_assign(varName, this->_vars.at(assignVarName));
 						}
 						else {
@@ -152,6 +136,20 @@ void Parser::Parse()
 	this->_curr = 0;
 	this->_currLine++;
 	Parse();
+}
+
+void Parser::checkSemi() {
+	if (peek().tokenType != TokenType::semi) {
+		if (peek().tokenType == TokenType::eol) {
+			std::string error = "Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
+			throw std::runtime_error(error);
+		}
+		else {
+			std::string error = "Unexpected token at end of line " + std::to_string(this->_currLine + 1);
+			throw std::runtime_error(error);
+		}
+	}
+	getAndMove();
 }
 
 Token Parser::peek()

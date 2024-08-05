@@ -20,5 +20,6 @@ private:
 	Token peek();
 	Token getAndMove();
 	bool operation(std::string a, std::string b, TokenType op);
+	void checkSemi();
 
 };
