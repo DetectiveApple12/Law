@@ -4,5 +4,9 @@ in x;
 rule if (x == 15) {
 	out "current version is up to date!";
 } rule if (x != 15) {
-	out "current version is not up to date!";
+	rule if (x > 15) {
+		out "current version was not released look for corruption!";
+	} rule if (x < 15) {
+		out "current version can be updated!";
+	}
 }
