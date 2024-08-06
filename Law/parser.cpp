@@ -9,14 +9,16 @@ Parser::~Parser()
 {
 }
 
-void Parser::Parse()
+void Parser::parse()
 {
 	if (this->_currLine >= this->_tokens.size()) return;
 
 	std::vector<Token>& currentTokens = _tokens[_currLine];
 
 	while (_curr < currentTokens.size()) {
+		// Rule was not met:
 		if (stopCodeBrak > 0) {
+			// Run until you get to the end of line or the closing brak:
 			while (peek().tokenType != TokenType::close_brak && peek().tokenType != TokenType::eol) {
 				if (peek().tokenType == TokenType::open_brak) {
 					stopCodeBrak++;
@@ -24,11 +26,13 @@ void Parser::Parse()
 				getAndMove();
 			}
 			if (peek().tokenType == TokenType::close_brak) {
+				// Remove one from the stop code brak if last token is brak:
 				getAndMove();
 				stopCodeBrak--;
 			}
 			continue;
 		}
+		// Parse output:
 		if (peek().tokenType == TokenType::out) {
 			getAndMove();
 			if (peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
@@ -52,6 +56,7 @@ void Parser::Parse()
 				throw std::runtime_error(error);
 			}
 		} 
+		// Parse variable defenition:
 		else if (peek().tokenType == TokenType::set) {
 			getAndMove();
 			if (peek().tokenType == TokenType::var_name) {
@@ -77,6 +82,7 @@ void Parser::Parse()
 				}
 			}
 		}
+		// Parse input:
 		else if (peek().tokenType == TokenType::in) {
 			getAndMove();
 			if (peek().tokenType == TokenType::var_name) {
@@ -87,6 +93,7 @@ void Parser::Parse()
 				this->_vars.insert_or_assign(varName, value);
 			}
 		}
+		// Parse rules:
 		else if (peek().tokenType == TokenType::rule) {
 			getAndMove();
 			if (peek().tokenType == TokenType::_if) {
@@ -151,6 +158,7 @@ void Parser::Parse()
 				}
 			}
 		}
+		// Parse close braks:
 		else if (runCodeBrak > 0 && peek().tokenType == TokenType::close_brak) {
 			getAndMove();
 			runCodeBrak--;
@@ -163,7 +171,7 @@ void Parser::Parse()
 
 	this->_curr = 0;
 	this->_currLine++;
-	Parse();
+	parse();
 }
 
 void Parser::checkSemi() {

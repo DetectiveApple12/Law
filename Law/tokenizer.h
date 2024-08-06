@@ -18,6 +18,9 @@ class Tokenizer
 public:
 	Tokenizer(std::vector<std::string> text);
 	~Tokenizer();
+	/*
+	Function will turn lines recieved from constructor to vector<vector<Token>>.
+	*/
 	void tokenize();
 	std::vector<std::vector<Token>>& getTokens();
 
@@ -28,10 +31,25 @@ private:
 	std::vector<Token> _tokens;
 	std::vector<std::string> _lines;
 
+	/*
+	Function will return the current char in the current line.
+	*/
 	char peek();
+	/*
+	Function will return the current char in the current line and move to the next char.
+	*/
 	char getAndMove();
+	/*
+	Function will parse a var_name. 
+	*/
 	std::string parseVar();
+	/*
+	Function will parse a integer. 
+	*/
 	std::string parseDig();
+	/*
+	Function will parse a string literal.
+	*/
 	std::string parseStrLit();
 
 };
