@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	}
 	Parser parser(tokenizer.getTokens());
 	try {
-		parser.Parse();
+		parser.parse();
 	}
 	catch (std::runtime_error e) {
 		std::cout << e.what() << std::endl;
