@@ -38,13 +38,13 @@ void Parser::parse()
 			if (peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
 				Token tokenHolder = getAndMove();
 				checkSemi();
-				std::cout << tokenHolder.value << std::endl;
+				std::cout << tokenHolder.value.substr(1, tokenHolder.value.length() - 1) << std::endl;
 			}
 			else if (peek().tokenType == TokenType::var_name) {
 				std::string varName = getAndMove().value;
 				if (this->_vars.find(varName) != this->_vars.end()) {
 					checkSemi();
-					std::cout << this->_vars.at(varName) << std::endl;
+					std::cout << this->_vars.at(varName).substr(1, varName.length() - 1) << std::endl;
 				}
 				else {
 					std::string error = "ParserError: Unkown variable `" + varName + "` at line " + std::to_string(this->_currLine + 1);
@@ -90,7 +90,7 @@ void Parser::parse()
 				std::string value;
 				std::getline(std::cin, value);
 				checkSemi();
-				this->_vars.insert_or_assign(varName, value);
+				this->_vars.insert_or_assign(varName, "s" + value);
 			}
 		}
 		// Parse rules:
@@ -205,8 +205,39 @@ Token Parser::getAndMove()
 	return this->_tokens[this->_currLine][this->_curr - 1];
 }
 
+bool isInteger(std::string string)
+{
+    auto i = string.begin();
+    while (i != string.end() && std::isdigit(*i)) ++i;
+    return !string.empty() && i == string.end();
+}
+
 bool Parser::operation(std::string a, std::string b, TokenType op)
 {
+	if (a[0] != 'd' && b[0] == 'd' || a[0] == 'd' && b[0] != 'd' || a[0] == 'd' && a[0] == 'd') {
+		int aInt = 0, bInt = 0;
+		if (a[0] == 'd' || isInteger(a.substr(1, a.length() - 1))) {
+			aInt = stoi(a.substr(1, a.length() - 1));
+		} if (b[0] == 'd' || isInteger(b.substr(1, b.length() - 1))) {
+			bInt = stoi(b.substr(1, b.length() - 1));
+		}
+
+		if (op == TokenType::eq) {
+			return aInt == bInt;
+		}
+		else if (op == TokenType::neq) {
+			return aInt != bInt;
+		}
+		else if (op == TokenType::larger) {
+			return aInt > bInt;
+		}
+		else if (op == TokenType::smaller) {
+			return aInt < bInt;
+		}
+		else {
+			return false;
+		}
+	}
 	if (op == TokenType::eq) {
 		return a == b;
 	}

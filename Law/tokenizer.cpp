@@ -40,7 +40,7 @@ void Tokenizer::tokenize()
 		}
 		else if (std::isdigit(peek())) {
 			std::string value = parseDig();
-			this->_tokens.push_back({ TokenType::int_lit, std::to_string(stoi(value)) });
+			this->_tokens.push_back({ TokenType::int_lit, value });
 		}
 		else if (peek() == '\"') {
 			std::string value = parseStrLit();
@@ -152,7 +152,7 @@ std::string Tokenizer::parseDig()
 	while (std::isdigit(peek())) {
 		value += getAndMove();
 	}
-	return value;
+	return "d" + value;
 }
 
 std::string Tokenizer::parseStrLit()
@@ -164,5 +164,5 @@ std::string Tokenizer::parseStrLit()
 		value += getAndMove();
 	}
 	getAndMove();
-	return value;
+	return "s" + value;
 }
