@@ -51,6 +51,12 @@ rule if (x < y) {
     out "5 is smaller than 10"; -- This will run
 }
 ```
+Inline Comments can be written in Law with `-- Comment --`:
+```law
+rule if (15 < 16) -- Check if 15 is smaller than 16 -- {
+    out "15 is smaller than 16";
+}
+```
 
 ### Input:
 Input can be taken in Law with the `in` keyword:

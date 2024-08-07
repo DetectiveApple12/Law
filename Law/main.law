@@ -1,16 +1,3 @@
-out "Enter current version:";
-in x;
-
-out -15;
-
-rule if (x == -15) {
-	out "current version is up to date!";
-} rule if (x != 15) {
-	rule if (x > 15) {
-		out "current version was not released look for corruption!";
-	} rule if (x < 15) {
-		out "current version can be updated!";
-	}
+rule if (15 < 16) -- Check if 15 is smaller than 16 -- {
+    out "15 is smaller than 16";
 }
-
-
