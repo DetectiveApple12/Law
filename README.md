@@ -1,5 +1,25 @@
 # Law
 
+## Commands for using Law
+
+### Base
+To use the base interpreter without files or input stream
+```law
+./Law.exe
+```
+
+### With Files
+To use the interpreter with files use
+```law
+./Law.exe <file-path>
+```
+
+### Stream
+To input with a stream you can use the -i
+```law
+./Law.exe -i
+```
+
 ## Tutorial For Law:
 The Law is to be a declarative, high-level programming language, simple in design, readable and expressive. It is well suited for applications where the intent is clear and the code short. The main use of Law is for checking that a user meets all requirments before downloading items or tools from the internet. 
 
