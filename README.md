@@ -75,4 +75,15 @@ rule if (x > y) {
 }
 ```
 
+### Negative Use
+
+You can now use negative numbers for anything
+```law
+set x = -15;
+
+rule if (x == -15) {
+    out -15;
+}
+```
+
 Tutorial will be continued in the future with more patches.
