@@ -5,7 +5,7 @@
 #include <cctype>
 
 enum class TokenType {
-	set, eq, rule, _if, open_brak, close_brak, open_par, close_par, out, str_lit, assign, semi, var_name, eol, neq, int_lit, larger, smaller, minus, in
+	set, eq, rule, _if, open_brak, close_brak, open_par, close_par, out, str_lit, assign, semi, var_name, eof, neq, int_lit, larger, smaller, minus, in
 };
 
 struct Token {
@@ -22,6 +22,8 @@ public:
 	Function will turn lines recieved from constructor to vector<vector<Token>>.
 	*/
 	void tokenize();
+	void clearTokens();
+	void updateLines(std::vector<std::string> lines);
 	std::vector<std::vector<Token>>& getTokens();
 
 private:
@@ -36,7 +38,7 @@ private:
 	*/
 	char peek();
 	/*
-	Function will return the next char in the current line.
+	Function will get next char in the current line.
 	*/
 	char peekTwo();
 	/*

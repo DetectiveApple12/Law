@@ -6,12 +6,15 @@
 class Parser
 {
 public:
+	Parser();
 	Parser(std::vector<std::vector<Token>> tokens);
 	~Parser();
 	/*
 	Function will parse the tokens and execute their functionality.
 	*/
 	void parse();
+
+	void updateTokens(std::vector<std::vector<Token>> tokens);
 
 private:
 	unsigned int _currLine;

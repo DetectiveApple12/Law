@@ -1,5 +1,10 @@
 #include "parser.h"
 
+Parser::Parser() : 
+	_curr(0), _tokens(), _currLine(0)
+{
+}
+
 Parser::Parser(std::vector<std::vector<Token>> tokens) :
 	_curr(0), _tokens(tokens), _currLine(0)
 {
@@ -15,11 +20,11 @@ void Parser::parse()
 
 	std::vector<Token>& currentTokens = _tokens[_currLine];
 
-	while (_curr < currentTokens.size()) {
+	while (peek().tokenType != TokenType::eof) {
 		// Rule was not met:
 		if (stopCodeBrak > 0) {
 			// Run until you get to the end of line or the closing brak:
-			while (peek().tokenType != TokenType::close_brak && peek().tokenType != TokenType::eol) {
+			while (peek().tokenType != TokenType::close_brak && peek().tokenType != TokenType::eof) {
 				if (peek().tokenType == TokenType::open_brak) {
 					stopCodeBrak++;
 				}
@@ -56,7 +61,8 @@ void Parser::parse()
 				std::string varName = getAndMove().value;
 				if (this->_vars.find(varName) != this->_vars.end()) {
 					checkSemi();
-					std::cout << this->_vars.at(varName).substr(1, varName.length() - 1) << std::endl;
+					auto val = this->_vars.at(varName);
+					std::cout << val.substr(1, val.length() - 1) << std::endl;
 				}
 				else {
 					std::string error = "ParserError: Unkown variable `" + varName + "` at line " + std::to_string(this->_currLine + 1);
@@ -218,16 +224,17 @@ void Parser::parse()
 	parse();
 }
 
+void Parser::updateTokens(std::vector<std::vector<Token>> tokens)
+{
+	this->_tokens = tokens;
+	this->_curr = 0;
+	this->_currLine = 0;
+}
+
 void Parser::checkSemi() {
 	if (peek().tokenType != TokenType::semi) {
-		if (peek().tokenType == TokenType::eol) {
-			std::string error = "ParserError: Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
-			throw std::runtime_error(error);
-		}
-		else {
-			std::string error = "ParserError: Unexpected token at end of line " + std::to_string(this->_currLine + 1);
-			throw std::runtime_error(error);
-		}
+		std::string error = "ParserError: Missing ';' at the end of line " + std::to_string(this->_currLine + 1);
+		throw std::runtime_error(error);
 	}
 	getAndMove();
 }
@@ -235,14 +242,22 @@ void Parser::checkSemi() {
 Token Parser::peek()
 {
 	if (this->_curr >= this->_tokens[this->_currLine].size()) {
-		return { TokenType::eol, "" };
+		if (this->_currLine + 1 >= this->_tokens.size()) {
+			return { TokenType::eof, "" };
+		}
+		this->_currLine++;
+		this->_curr = 0;
+		return peek();
 	}
 	return this->_tokens[this->_currLine][this->_curr];
 }
 
 Token Parser::peekTwo() {
 	if (this->_curr + 1 >= this->_tokens[this->_currLine].size()) {
-		return { TokenType::eol, "" };
+		if (this->_currLine + 1 >= this->_tokens.size()) {
+			return { TokenType::eof, "" };
+		}
+		return this->_tokens[this->_currLine + 1][0];
 	}
 	return this->_tokens[this->_currLine][this->_curr + 1];
 }
@@ -250,7 +265,12 @@ Token Parser::peekTwo() {
 Token Parser::getAndMove()
 {
 	if (this->_curr >= this->_tokens[this->_currLine].size()) {
-		return { TokenType::eol, "" };
+		if (this->_currLine + 1 >= this->_tokens.size()) {
+			return { TokenType::eof, "" };
+		}
+		this->_currLine++;
+		this->_curr = 0;
+		return getAndMove();
 	}
 	this->_curr++;
 	return this->_tokens[this->_currLine][this->_curr - 1];

@@ -113,10 +113,27 @@ void Tokenizer::tokenize()
 		}
 	}
 
-	this->_tokensSets.push_back(this->_tokens);
+	if (this->_tokens.size() != 0) {
+		this->_tokensSets.push_back(this->_tokens);
+
+		this->_curr = 0;
+		this->_currLine++;
+		tokenize();
+	}
+
+}
+
+void Tokenizer::clearTokens()
+{
+	this->_tokens.clear();
+	this->_tokensSets.clear();
+}
+
+void Tokenizer::updateLines(std::vector<std::string> lines)
+{
+	this->_lines = lines;
 	this->_curr = 0;
-	this->_currLine++;
-	tokenize();
+	this->_currLine = 0;
 }
 
 std::vector<std::vector<Token>>& Tokenizer::getTokens()
