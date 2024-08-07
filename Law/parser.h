@@ -26,6 +26,10 @@ private:
 	*/
 	Token peek();
 	/*
+	Function will return the next token in the current line.
+	*/
+	Token peekTwo();
+	/*
 	Function will return the current token in the current line and move to the next token.
 	*/
 	Token getAndMove();

@@ -63,4 +63,16 @@ rule if (currentVersion == "1.0.0") {
 }
 ```
 
+### Integers Use
+
+You can now check for equality between integers meaning including negative numbers.
+```law
+set x = 15;
+in y;
+
+rule if (x > y) {
+    out "Negative numbers work";
+}
+```
+
 Tutorial will be continued in the future with more patches.

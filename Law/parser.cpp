@@ -40,6 +40,17 @@ void Parser::parse()
 				checkSemi();
 				std::cout << tokenHolder.value.substr(1, tokenHolder.value.length() - 1) << std::endl;
 			}
+			else if (peek().tokenType == TokenType::minus) {
+				getAndMove();
+				if (peek().tokenType == TokenType::int_lit) {
+					Token intLit = getAndMove();
+					std::cout << "-" + intLit.value.substr(1, intLit.value.length() - 1) << std::endl;
+				}
+				else {
+					std::string error = "ParserError: Unexpected token `-` at line " + std::to_string(this->_currLine + 1);
+					throw std::runtime_error(error);
+				}
+			}
 			else if (peek().tokenType == TokenType::var_name) {
 				std::string varName = getAndMove().value;
 				if (this->_vars.find(varName) != this->_vars.end()) {
@@ -67,6 +78,18 @@ void Parser::parse()
 						std::string value = getAndMove().value;
 						checkSemi();
 						this->_vars.insert_or_assign(varName, value);
+					}
+					else if (peek().tokenType == TokenType::minus) {
+						getAndMove();
+						if (peek().tokenType == TokenType::int_lit) {
+							Token intLit = getAndMove();
+							checkSemi();
+							this->_vars.insert_or_assign(varName, "d-" + intLit.value.substr(1, intLit.value.length() - 1));
+						}
+						else {
+							std::string error = "ParserError: Unexpected token `-` at line " + std::to_string(this->_currLine + 1);
+							throw std::runtime_error(error);
+						}
 					}
 					else if (peek().tokenType == TokenType::var_name) {
 						std::string assignVarName = getAndMove().value;
@@ -103,7 +126,7 @@ void Parser::parse()
 					throw std::runtime_error(error);
 				}
 				getAndMove();
-				if (peek().tokenType == TokenType::var_name || peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
+				if (peek().tokenType == TokenType::var_name || peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit || peek().tokenType == TokenType::minus) {
 					Token token = getAndMove();
 					std::string first;
 					if (token.tokenType == TokenType::var_name) {
@@ -116,14 +139,24 @@ void Parser::parse()
 							throw std::runtime_error(error);
 						}
 					}
+					else if (token.tokenType == TokenType::minus) {
+						if (peek().tokenType == TokenType::int_lit) {
+							Token intLit = getAndMove();
+							first = "d-" + intLit.value.substr(1, intLit.value.length() - 1);
+						}
+						else {
+							std::string error = "ParserError: Unexpected token `-` at line " + std::to_string(this->_currLine + 1);
+							throw std::runtime_error(error);
+						}
+					}
 					else {
 						first = token.value;
 					}
 					if (peek().tokenType == TokenType::eq || peek().tokenType == TokenType::neq || peek().tokenType == TokenType::larger || peek().tokenType == TokenType::smaller) {
 						TokenType oper = getAndMove().tokenType;
-						if (peek().tokenType == TokenType::var_name || peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit) {
+						if (peek().tokenType == TokenType::var_name || peek().tokenType == TokenType::str_lit || peek().tokenType == TokenType::int_lit || peek().tokenType == TokenType::minus) {
 							token = getAndMove();
-							if (peek().tokenType != TokenType::close_par) {
+							if (peek().tokenType != TokenType::close_par && (peek().tokenType == TokenType::minus && peekTwo().tokenType != TokenType::close_par)) {
 								std::string error = "ParserError: Expected `)` after statement " + std::to_string(this->_currLine + 1);
 								throw std::runtime_error(error);
 							}
@@ -135,6 +168,16 @@ void Parser::parse()
 								}
 								else {
 									std::string error = "ParserError: Unkown variable `" + first + "` at line " + std::to_string(this->_currLine + 1);
+									throw std::runtime_error(error);
+								}
+							}
+							else if (token.tokenType == TokenType::minus) {
+								if (peek().tokenType == TokenType::int_lit) {
+									Token intLit = getAndMove();
+									second = "d-" + intLit.value.substr(1, intLit.value.length() - 1);
+								}
+								else {
+									std::string error = "ParserError: Unexpected token `-` at line " + std::to_string(this->_currLine + 1);
 									throw std::runtime_error(error);
 								}
 							}
@@ -196,6 +239,13 @@ Token Parser::peek()
 	return this->_tokens[this->_currLine][this->_curr];
 }
 
+Token Parser::peekTwo() {
+	if (this->_curr + 1 >= this->_tokens[this->_currLine].size()) {
+		return { TokenType::eol, "" };
+	}
+	return this->_tokens[this->_currLine][this->_curr + 1];
+}
+
 Token Parser::getAndMove()
 {
 	if (this->_curr >= this->_tokens[this->_currLine].size()) {
@@ -208,7 +258,7 @@ Token Parser::getAndMove()
 bool isInteger(std::string string)
 {
     auto i = string.begin();
-    while (i != string.end() && std::isdigit(*i)) ++i;
+    while (i != string.end() && (std::isdigit(*i) || *i == '-')) ++i;
     return !string.empty() && i == string.end();
 }
 
