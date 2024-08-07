@@ -92,4 +92,16 @@ rule if (x == -15) {
 }
 ```
 
+## A Simple Checker
+```law
+in gccVersion;
+in cmakeVersion;
+
+rule if (gccVersion < 15) {
+    out "GCC Version is up to date!";
+} rule if (cmakeVersion < 4) {
+    out "CMake Version is up to date!";
+}
+```
+
 Tutorial will be continued in the future with more patches.
