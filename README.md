@@ -7,6 +7,7 @@ To use the base interpreter without files or input stream
 ```law
 ./Law.exe
 ```
+To end use of base compiler you can type exit and to clear screen you can type clear.
 
 ### With Files
 To use the interpreter with files use
@@ -18,6 +19,14 @@ To use the interpreter with files use
 To input with a stream you can use the -i
 ```law
 ./Law.exe -i
+```
+To end the stream of input you can enter a blank line
+```law
+$ ./Law.exe
+set x = 5;
+out x;
+
+5
 ```
 
 ## Tutorial For Law:
