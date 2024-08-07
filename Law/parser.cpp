@@ -44,6 +44,7 @@ void Parser::parse()
 				getAndMove();
 				if (peek().tokenType == TokenType::int_lit) {
 					Token intLit = getAndMove();
+					checkSemi();
 					std::cout << "-" + intLit.value.substr(1, intLit.value.length() - 1) << std::endl;
 				}
 				else {

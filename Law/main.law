@@ -1,6 +1,8 @@
 out "Enter current version:";
 in x;
 
+out -15;
+
 rule if (x == -15) {
 	out "current version is up to date!";
 } rule if (x != 15) {
