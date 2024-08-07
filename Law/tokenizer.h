@@ -36,6 +36,10 @@ private:
 	*/
 	char peek();
 	/*
+	Function will return the next char in the current line.
+	*/
+	char peekTwo();
+	/*
 	Function will return the current char in the current line and move to the next char.
 	*/
 	char getAndMove();

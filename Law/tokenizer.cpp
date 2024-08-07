@@ -97,7 +97,11 @@ void Tokenizer::tokenize()
 		else if (peek() == '-') {
 			getAndMove();
 			if (peek() == '-') {
-				break;
+				getAndMove();
+				while ((peek() != '-' || peekTwo() != '-') && peek() != '\0') getAndMove();
+				if (peek() == '\0') break;
+				getAndMove();
+				getAndMove();
 			}
 			else {
 				this->_tokens.push_back({ TokenType::minus, "" });
@@ -126,6 +130,14 @@ char Tokenizer::peek()
 		return '\0';
 	}
 	return this->_lines[this->_currLine][this->_curr];
+}
+
+char Tokenizer::peekTwo()
+{
+	if (this->_curr + 1 >= this->_lines[this->_currLine].size()) {
+		return '\0';
+	}
+	return this->_lines[this->_currLine][this->_curr + 1];
 }
 
 char Tokenizer::getAndMove()
