@@ -109,7 +109,19 @@ void Parser::parse()
 							throw std::runtime_error(error);
 						}
 					}
+					else {
+						std::string error = "ParserError: Unexpected token at line " + std::to_string(this->_currLine + 1);
+						throw std::runtime_error(error);
+					}
 				}
+				else {
+					std::string error = "ParserError: Unexpected token at line " + std::to_string(this->_currLine + 1);
+					throw std::runtime_error(error);
+				}
+			}
+			else {
+				std::string error = "ParserError: Unexpected token at line " + std::to_string(this->_currLine + 1);
+				throw std::runtime_error(error);
 			}
 		}
 		// Parse input:
