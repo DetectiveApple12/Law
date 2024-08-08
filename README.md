@@ -8,6 +8,10 @@ To use the base interpreter without files or input stream
 ./Law.exe
 ```
 To end use of base compiler you can type exit and to clear screen you can type clear.
+```law
+$ ./Law.exe
+[0] exit
+```
 
 ### With Files
 To use the interpreter with files use
