@@ -131,6 +131,16 @@ rule if (x == -15) {
 }
 ```
 
+### Conventions in Law
+```law
+set varName = 0; -- Comment to tell what occurs in the line
+in inputVar;
+
+rule if (varName == "text") {
+    out inputVar;
+}
+```
+
 ## A Simple Checker
 ```law
 in gccVersion;
