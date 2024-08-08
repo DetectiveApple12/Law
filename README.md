@@ -19,6 +19,12 @@ To use the interpreter with files use
 ./Law.exe <file-path>
 ```
 
+To use the interpreter with multiple files use
+```law
+./Law.exe <file-path-1> <file-path-2> ... <file-path-n>
+```
+Files will execute in input order
+
 ### Stream
 To input with a stream you can use the -i
 ```law
