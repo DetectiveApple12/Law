@@ -107,8 +107,13 @@ void whileInputParse() {
 }
 
 int main(int argc, char** argv) {
-	if (argc == 2) {
-		if (std::string(argv[1]) == "-h") {
+	if (argc > 2) {
+		for (int i = 1; i < argc; i++) {
+			fileParse(argv[i]);
+		}
+	}
+	else if (argc == 2) {
+		if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help") {
 			std::cout << "Usage is ./law <file-path> or ./law" << std::endl;
 			return 0;
 		} 
