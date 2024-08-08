@@ -22,8 +22,17 @@ public:
 	Function will turn lines recieved from constructor to vector<vector<Token>>.
 	*/
 	void tokenize();
+	/*
+	Function will clear tokens in tokens and tokensSet.
+	*/
 	void clearTokens();
+	/*
+	Function will update lines vector.
+	*/
 	void updateLines(std::vector<std::string> lines);
+	/*
+	Function will retrieve tokens.
+	*/
 	std::vector<std::vector<Token>>& getTokens();
 
 private:
