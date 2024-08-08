@@ -134,6 +134,10 @@ void Parser::parse()
 				checkSemi();
 				this->_vars.insert_or_assign(varName, "s" + value);
 			}
+			else {
+				std::string error = "ParserError: Unexpected token at line " + std::to_string(this->_currLine + 1);
+				throw std::runtime_error(error);
+			}
 		}
 		// Parse rules:
 		else if (peek().tokenType == TokenType::rule) {
