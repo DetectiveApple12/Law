@@ -1,3 +1,0 @@
-rule if (15 < 16) -- Check if 15 is smaller than 16 -- {
-    out "15 is smaller than 16";
-}
